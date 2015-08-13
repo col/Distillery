@@ -8,19 +8,19 @@ options = { :input_path => nil, :output_path => nil, :prefix_format => /./, :fil
 parser = OptionParser.new do|opts|
   opts.banner = "Usage: distillery [options]"
 
-  opts.on('-i', '--input path', 'Input Path') do |input_path|
+  opts.on('-i', '--input PATH', 'Input Path') do |input_path|
     options[:input_path] = input_path
   end
 
-  opts.on('-o', '--output path', 'Output Path') do |output_path|
+  opts.on('-o', '--output PATH', 'Output Path') do |output_path|
     options[:output_path] = output_path
   end
 
-  opts.on('-p', '--prefix regexp', 'Line Prefix Format') do |prefix_format|
+  opts.on('-p', '--prefix REGEXP', 'Line Prefix Format') do |prefix_format|
     options[:prefix_format] = prefix_format
   end
 
-  opts.on('-f', '--filter regexp', 'Filter') do |filter|
+  opts.on('-f', '--filter REGEXP', 'Filter') do |filter|
     options[:filters] << filter
   end
 
@@ -35,6 +35,11 @@ parser = OptionParser.new do|opts|
 end
 
 parser.parse!
+
+unless options[:input_path]
+  puts parser
+  exit
+end
 
 puts "Input Path: #{options[:input_path]}" if options[:verbose]
 
