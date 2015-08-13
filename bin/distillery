@@ -1,0 +1,56 @@
+#!/usr/bin/env ruby
+$:.unshift(File.expand_path(File.dirname(__FILE__), '../src'))
+require 'optparse'
+require "log_distillery.rb"
+
+options = { :input_path => nil, :output_path => nil, :prefix_format => /./, :filters => [], :verbose => false }
+
+parser = OptionParser.new do|opts|
+  opts.banner = "Usage: distillery [options]"
+
+  opts.on('-i', '--input path', 'Input Path') do |input_path|
+    options[:input_path] = input_path
+  end
+
+  opts.on('-o', '--output path', 'Output Path') do |output_path|
+    options[:output_path] = output_path
+  end
+
+  opts.on('-p', '--prefix regexp', 'Line Prefix Format') do |prefix_format|
+    options[:prefix_format] = prefix_format
+  end
+
+  opts.on('-f', '--filter regexp', 'Filter') do |filter|
+    options[:filters] << filter
+  end
+
+  opts.on('-v', '--verbose', 'Verbose') do |verbose|
+    options[:verbose] = verbose
+  end
+
+  opts.on('-h', '--help', 'Displays Help') do
+    puts opts
+    exit
+  end
+end
+
+parser.parse!
+
+puts "Input Path: #{options[:input_path]}" if options[:verbose]
+
+puts "Output Path: #{options[:output_path]}" if options[:verbose]
+
+puts "Prefix: #{options[:prefix_format]}" if options[:verbose]
+prefix_regexp = Regexp.new(options[:prefix_format])
+
+@distillery = LogDistillery.new(options[:input_path], options[:output_path], prefix_regexp)
+
+options[:filters].each do |filter|
+  puts "Filter: #{filter}" if options[:verbose]
+  @distillery.add_filter Regexp.new(filter)
+end
+
+output = @distillery.distill
+
+puts output unless options[:output_path]
+
