@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
-$:.unshift(File.expand_path(File.dirname(__FILE__), '../src'))
+$:.unshift(File.expand_path("../src", File.dirname(__FILE__)))
 require 'optparse'
-require "log_distillery.rb"
+require 'log_distillery.rb'
 
 options = { :input_path => nil, :output_path => nil, :prefix_format => /./, :filters => [], :verbose => false }
 
